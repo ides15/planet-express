@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -12,9 +14,17 @@ import (
 	"google.golang.org/grpc"
 )
 
+const planetExpressFilename = "../planet_express.json"
+
 var (
 	serverAddr = flag.String("server_addr", "localhost:10000", "The server address in the format of host:port")
 )
+
+type planetExpressData struct {
+	Ship          pb.Ship        `json:"ship"`
+	AllDeliveries []*pb.Delivery `json:"all_deliveries"`
+	Crew          pb.Crew        `json:"crew"`
+}
 
 func getShip(client pb.PlanetExpressClient) (pb.Ship, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -112,4 +122,18 @@ func main() {
 	log.Printf("%+v\n", delivery)
 	log.Println()
 
+	// Take planet express information and write to file
+	data := &planetExpressData{
+		Ship:          ship,
+		Crew:          crew,
+		AllDeliveries: deliveries,
+	}
+
+	file, _ := json.MarshalIndent(data, "", " ")
+
+	if err = ioutil.WriteFile(planetExpressFilename, file, 0644); err != nil {
+		log.Fatal("could not write planet express data to file")
+	}
+
+	log.Printf("%s created\n", planetExpressFilename)
 }
