@@ -1,0 +1,15 @@
+schema {
+    query: Query
+}
+
+type Query {
+    getDelivery(id: String!): Delivery
+}
+
+type Delivery {
+    id: String!
+    timestamp: Int!
+    name: String!
+    weight: Int!
+    fragile: Boolean!
+}
