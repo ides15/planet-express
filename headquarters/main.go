@@ -1,16 +1,13 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"flag"
 	"io/ioutil"
 	"log"
-	"time"
 
 	pb "github.com/ides15/planet-express/ship/pkg/planetexpress"
 
-	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc"
 )
 
@@ -18,6 +15,7 @@ const planetExpressFilename = "../planet_express.json"
 
 var (
 	serverAddr = flag.String("server_addr", "localhost:10000", "The server address in the format of host:port")
+	client     = pb.NewPlanetExpressClient(nil)
 )
 
 type planetExpressData struct {
@@ -27,94 +25,7 @@ type planetExpressData struct {
 	Weapons       []*pb.Weapon   `json:"weapons"`
 }
 
-func getShip(client pb.PlanetExpressClient) (pb.Ship, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	resp, err := client.GetShip(ctx, &empty.Empty{})
-
-	if err != nil {
-		log.Fatalf("%v.GetShip(_) = _, %v: ", client, err)
-		return pb.Ship{}, err
-	}
-
-	return *resp.GetShip(), nil
-}
-
-func getCrew(client pb.PlanetExpressClient) (pb.Crew, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	resp, err := client.GetCrew(ctx, &empty.Empty{})
-
-	if err != nil {
-		log.Fatalf("%v.GetCrew(_) = _, %v: ", client, err)
-		return pb.Crew{}, err
-	}
-
-	return *resp.GetCrew(), nil
-}
-
-func listDeliveries(client pb.PlanetExpressClient) ([]*pb.Delivery, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	resp, err := client.ListDeliveries(ctx, &empty.Empty{})
-
-	if err != nil {
-		log.Fatalf("%v.ListDeliveries(_) = _, %v: ", client, err)
-		return []*pb.Delivery{}, err
-	}
-
-	return resp.GetDeliveries(), nil
-}
-
-func getDelivery(client pb.PlanetExpressClient, getDeliveryRequest *pb.GetDeliveryRequest) (pb.Delivery, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	resp, err := client.GetDelivery(ctx, getDeliveryRequest)
-
-	if err != nil {
-		log.Fatalf("%v.GetDelivery(_) = _, %v: ", client, err)
-		return pb.Delivery{}, err
-	}
-
-	return *resp.GetDelivery(), nil
-}
-
-func getWeapons(client pb.PlanetExpressClient) ([]*pb.Weapon, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	resp, err := client.GetWeapons(ctx, &empty.Empty{})
-
-	if err != nil {
-		log.Fatalf("%v.GetWeapons(_) = _, %v: ", client, err)
-		return []*pb.Weapon{}, err
-	}
-
-	return resp.GetWeapons(), nil
-}
-
-func main() {
-	log.Println("Planet Express Headquarters")
-
-	flag.Parse()
-
-	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
-	}
-
-	conn, err := grpc.Dial(*serverAddr, opts...)
-	if err != nil {
-		log.Fatalf("failed to dial: %v", err)
-	}
-	defer conn.Close()
-
-	client := pb.NewPlanetExpressClient(conn)
-	log.Printf("Connected to planet express ship with addr: %s\n\n", *serverAddr)
-
+func generatePlanetExpressJSON() {
 	ship, _ := getShip(client)
 	log.Println("SHIP:")
 	log.Printf("%+v\n", ship)
@@ -154,9 +65,33 @@ func main() {
 
 	file, _ := json.MarshalIndent(data, "", " ")
 
-	if err = ioutil.WriteFile(planetExpressFilename, file, 0644); err != nil {
+	if err := ioutil.WriteFile(planetExpressFilename, file, 0644); err != nil {
 		log.Fatal("could not write planet express data to file")
 	}
 
 	log.Printf("%s created\n", planetExpressFilename)
+}
+
+func main() {
+	log.Println("Planet Express Headquarters")
+
+	flag.Parse()
+
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+	}
+
+	conn, err := grpc.Dial(*serverAddr, opts...)
+	if err != nil {
+		log.Fatalf("failed to dial: %v", err)
+	}
+	defer conn.Close()
+
+	client = pb.NewPlanetExpressClient(conn)
+	log.Printf("Connected to planet express ship with addr: %s\n\n", *serverAddr)
+
+	generatePlanetExpressJSON()
+
+	// GraphQL
+	StartServer()
 }
