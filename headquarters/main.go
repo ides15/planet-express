@@ -58,6 +58,20 @@ func listDeliveries(client pb.PlanetExpressClient) ([]*pb.Delivery, error) {
 	return resp.Deliveries, nil
 }
 
+func getDelivery(client pb.PlanetExpressClient, getDeliveryRequest *pb.GetDeliveryRequest) (pb.Delivery, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	resp, err := client.GetDelivery(ctx, getDeliveryRequest)
+
+	if err != nil {
+		log.Fatalf("%v.GetDelivery(_) = _, %v: ", client, err)
+		return pb.Delivery{}, err
+	}
+
+	return *resp.Delivery, nil
+}
+
 func main() {
 	log.Println("Planet Express Headquarters")
 
@@ -91,6 +105,11 @@ func main() {
 	for _, delivery := range deliveries {
 		log.Printf("%+v\n", delivery)
 	}
+	log.Println()
+
+	delivery, _ := getDelivery(client, &pb.GetDeliveryRequest{Id: "ff614c03-99c5-417c-8c23-46e30ae2f822"})
+	log.Println("SINGLE DELIVERY:")
+	log.Printf("%+v\n", delivery)
 	log.Println()
 
 }
