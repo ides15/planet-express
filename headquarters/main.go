@@ -30,6 +30,20 @@ func getShip(client pb.PlanetExpressClient) (pb.Ship, error) {
 	return *resp.Ship, nil
 }
 
+func getCrew(client pb.PlanetExpressClient) (pb.Crew, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	resp, err := client.GetCrew(ctx, &empty.Empty{})
+
+	if err != nil {
+		log.Fatalf("%v.GetCrew(_) = _, %v: ", client, err)
+		return pb.Crew{}, err
+	}
+
+	return *resp.Crew, nil
+}
+
 func main() {
 	log.Println("Planet Express Headquarters")
 
@@ -49,5 +63,13 @@ func main() {
 	log.Printf("Connected to planet express ship with addr: %s\n\n", *serverAddr)
 
 	ship, _ := getShip(client)
-	log.Println(ship)
+	log.Println("SHIP:")
+	log.Printf("%+v\n", ship)
+	log.Println()
+
+	crew, _ := getCrew(client)
+	log.Println("CREW:")
+	log.Println(crew)
+	log.Println()
+
 }
