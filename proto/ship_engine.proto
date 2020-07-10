@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package planetexpress;
+option go_package = "pkg/planetexpress";
+
+message ShipEngine {
+  int32 cylinders = 1;
+  double liters = 2;
+  string name = 3;
+  bool dohc = 5;
+}

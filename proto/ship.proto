@@ -5,6 +5,8 @@ option go_package = "pkg/planetexpress";
 
 import "crew.proto";
 import "delivery.proto";
+import "ship_engine.proto";
+import "weapon.proto";
 
 message Ship {
   enum FuelLevel {
@@ -19,6 +21,9 @@ message Ship {
 
   Crew crew = 4;
   Delivery delivery = 5;
+
+  ShipEngine ship_engine = 6;
+  repeated Weapon weapons = 7;
 }
 
 message GetShipResponse { Ship ship = 1; }

@@ -6,6 +6,7 @@ option go_package = "pkg/planetexpress";
 import "ship.proto";
 import "crew.proto";
 import "delivery.proto";
+import "weapon.proto";
 import "google/protobuf/empty.proto";
 
 service PlanetExpress {
@@ -15,4 +16,6 @@ service PlanetExpress {
 
   rpc ListDeliveries(google.protobuf.Empty) returns (ListDeliveriesResponse) {}
   rpc GetDelivery(GetDeliveryRequest) returns (GetDeliveryResponse) {}
+
+  rpc GetWeapons(google.protobuf.Empty) returns (GetWeaponsResponse) {}
 }
