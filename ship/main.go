@@ -138,7 +138,7 @@ func (s *planetExpressShipServer) GetDelivery(ctx context.Context, getDeliveryRe
 func main() {
 	log.Println("Planet Express Ship")
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
