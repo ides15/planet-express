@@ -121,6 +121,20 @@ func (s *planetExpressShipServer) ListDeliveries(ctx context.Context, empty *emp
 	}, nil
 }
 
+func (s *planetExpressShipServer) GetDelivery(ctx context.Context, getDeliveryRequest *pb.GetDeliveryRequest) (*pb.GetDeliveryResponse, error) {
+	id := getDeliveryRequest.GetId()
+
+	for _, delivery := range deliveries {
+		if delivery.GetId() == id {
+			return &pb.GetDeliveryResponse{
+				Delivery: delivery,
+			}, nil
+		}
+	}
+
+	return nil, fmt.Errorf("cannot find delivery '%s'", id)
+}
+
 func main() {
 	log.Println("Planet Express Ship")
 
