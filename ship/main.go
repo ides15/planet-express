@@ -115,6 +115,12 @@ func (s *planetExpressShipServer) GetCrew(ctx context.Context, empty *empty.Empt
 	}, nil
 }
 
+func (s *planetExpressShipServer) ListDeliveries(ctx context.Context, empty *empty.Empty) (*pb.ListDeliveriesResponse, error) {
+	return &pb.ListDeliveriesResponse{
+		Deliveries: deliveries,
+	}, nil
+}
+
 func main() {
 	log.Println("Planet Express Ship")
 
