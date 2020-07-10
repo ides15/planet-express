@@ -15,3 +15,7 @@ build:
 clean:
 	rm -f ./ship/ship
 	rm -f ./headquarters/headquarters
+docker:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o ship -v ./ship
+	docker build --tag ship ./ship
+	docker run -p 10000:10000 ship
