@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package planetexpress;
+option go_package = "pkg/planetexpress";
+
+message Crew {
+  enum Mood {
+    ECSTATIC = 0;
+    CHEERFUL = 1;
+    SATISFIED = 2;
+    FRUSTRATED = 3;
+    MUTINOUS = 4;
+  }
+
+  int64 size = 1;
+  Mood mood = 2;
+  bool captain_marooned = 3;
+  repeated Member members = 4;
+}
+
+message Member {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  int64 age = 4;
+}
+
+message GetCrewResponse { Crew crew = 1; }

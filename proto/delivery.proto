@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package planetexpress;
+option go_package = "pkg/planetexpress";
+
+message Delivery {
+  string id = 1;
+  int64 timestamp = 2; // in unix timestamp
+  string name = 3;
+  int64 weight = 4; // in lbs
+  bool fragile = 5;
+}
+
+message ListDeliveriesResponse { repeated Delivery deliveries = 1; }
+
+message GetDeliveryRequest { string id = 1; }
+message GetDeliveryResponse { Delivery delivery = 1; }
