@@ -33,6 +33,10 @@ You should try changing the protobuf files in `./proto` and re-run `make`. The g
 
 A makefile has been provided for you that will generate go code with the protoc compiler and build the executables. Run `make` and validate that you have executables at `./ship/ship` and `./headquarters/headquarters`
 
+### Using Docker
+
+To run the server (`./ship`) using Docker, run `make docker` and the server will start on port 10000.
+
 ## Your Assignment
 
 Time Estimate: 3 hours
@@ -55,7 +59,7 @@ Time Estimate: 4 hours
 3. Add GraphQL support to the gateway (headquarters client). A good library for this is https://github.com/graph-gophers/graphql-go
 4. Map a graphql resource and endpoint to a gRPC call such that you can use a GraphQL client to get data from the ship backend.
 
-### Bite my shiny metal a$$ (extra, extra)
+### Bite my shiny metal a\$\$ (extra, extra)
 
 Time Estimate: 4 hours
 
@@ -65,14 +69,30 @@ Time Estimate: 4 hours
 ** These would really impress us here at Planet Express! **
 
 ## Deliverables
+
 Make your repository public and share the repo url with Divvy's recruiter.
 
 ## Helpful Resources
-- https://grpc.io/docs/languages/go/quickstart/
-- https://grpc.io/docs/languages/go/basics/
-- https://cloud.google.com/apis/design
-- https://github.com/graph-gophers/graphql-go
-- https://reactjs.org/docs/create-a-new-react-app.html
+
+-   https://grpc.io/docs/languages/go/quickstart/
+-   https://grpc.io/docs/languages/go/basics/
+-   https://cloud.google.com/apis/design
+-   https://github.com/graph-gophers/graphql-go
+-   https://reactjs.org/docs/create-a-new-react-app.html
 
 ## Questions
+
 If you find errors or otherwise need clarification on anything in the excercise, please reach out to Justin Sharp <justin.sharp@divvypay.com>.
+
+#
+
+## Implementation
+
+### First Task
+
+-   Implemented `crew.proto` and `delivery.proto` and the functions listed in `planet_express_service.proto`.
+-   Added `crew` and `delivery` resources to `ship.proto`
+-   Implemented rpc functions in client and server
+-   Outputted data to `planet_express.json`
+-   Added Dockerfile to `./ship`
+-   Updated `README.md` with details on how to run `./ship` in a container --> [Using Docker](#using-docker)
