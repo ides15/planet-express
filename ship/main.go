@@ -67,6 +67,18 @@ var (
 			Age:       52,
 		},
 	}
+	weapons = []*pb.Weapon{
+		{
+			Name:         "Big Ole' Gun",
+			AmmoCapacity: 1,
+			Range:        12,
+		},
+		{
+			Name:         "P-Shooter",
+			AmmoCapacity: 200,
+			Range:        1,
+		},
+	}
 )
 
 type planetExpressShipServer struct {
@@ -100,6 +112,13 @@ func (s *planetExpressShipServer) GetShip(ctx context.Context, empty *empty.Empt
 				Members:         members,
 			},
 			Delivery: delivery,
+			ShipEngine: &pb.ShipEngine{
+				Cylinders: 6,
+				Liters:    3.0,
+				Name:      "2JZ",
+				Dohc:      true,
+			},
+			Weapons: weapons,
 		},
 	}, nil
 }
@@ -133,6 +152,12 @@ func (s *planetExpressShipServer) GetDelivery(ctx context.Context, getDeliveryRe
 	}
 
 	return nil, fmt.Errorf("cannot find delivery '%s'", id)
+}
+
+func (s *planetExpressShipServer) GetWeapons(ctx context.Context, empty *empty.Empty) (*pb.GetWeaponsResponse, error) {
+	return &pb.GetWeaponsResponse{
+		Weapons: weapons,
+	}, nil
 }
 
 func main() {

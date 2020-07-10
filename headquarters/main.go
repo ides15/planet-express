@@ -24,6 +24,7 @@ type planetExpressData struct {
 	Ship          pb.Ship        `json:"ship"`
 	AllDeliveries []*pb.Delivery `json:"all_deliveries"`
 	Crew          pb.Crew        `json:"crew"`
+	Weapons       []*pb.Weapon   `json:"weapons"`
 }
 
 func getShip(client pb.PlanetExpressClient) (pb.Ship, error) {
@@ -37,7 +38,7 @@ func getShip(client pb.PlanetExpressClient) (pb.Ship, error) {
 		return pb.Ship{}, err
 	}
 
-	return *resp.Ship, nil
+	return *resp.GetShip(), nil
 }
 
 func getCrew(client pb.PlanetExpressClient) (pb.Crew, error) {
@@ -51,7 +52,7 @@ func getCrew(client pb.PlanetExpressClient) (pb.Crew, error) {
 		return pb.Crew{}, err
 	}
 
-	return *resp.Crew, nil
+	return *resp.GetCrew(), nil
 }
 
 func listDeliveries(client pb.PlanetExpressClient) ([]*pb.Delivery, error) {
@@ -65,7 +66,7 @@ func listDeliveries(client pb.PlanetExpressClient) ([]*pb.Delivery, error) {
 		return []*pb.Delivery{}, err
 	}
 
-	return resp.Deliveries, nil
+	return resp.GetDeliveries(), nil
 }
 
 func getDelivery(client pb.PlanetExpressClient, getDeliveryRequest *pb.GetDeliveryRequest) (pb.Delivery, error) {
@@ -79,7 +80,21 @@ func getDelivery(client pb.PlanetExpressClient, getDeliveryRequest *pb.GetDelive
 		return pb.Delivery{}, err
 	}
 
-	return *resp.Delivery, nil
+	return *resp.GetDelivery(), nil
+}
+
+func getWeapons(client pb.PlanetExpressClient) ([]*pb.Weapon, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	resp, err := client.GetWeapons(ctx, &empty.Empty{})
+
+	if err != nil {
+		log.Fatalf("%v.GetWeapons(_) = _, %v: ", client, err)
+		return []*pb.Weapon{}, err
+	}
+
+	return resp.GetWeapons(), nil
 }
 
 func main() {
@@ -122,11 +137,19 @@ func main() {
 	log.Printf("%+v\n", delivery)
 	log.Println()
 
+	weapons, _ := getWeapons(client)
+	log.Println("WEAPONS:")
+	for _, weapon := range weapons {
+		log.Printf("%+v\n", weapon)
+	}
+	log.Println()
+
 	// Take planet express information and write to file
 	data := &planetExpressData{
 		Ship:          ship,
 		Crew:          crew,
 		AllDeliveries: deliveries,
+		Weapons:       weapons,
 	}
 
 	file, _ := json.MarshalIndent(data, "", " ")
