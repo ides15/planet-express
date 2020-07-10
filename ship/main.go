@@ -103,6 +103,14 @@ func (s *planetExpressShipServer) GetShip(ctx context.Context, empty *empty.Empt
 		},
 	}, nil
 }
+
+func (s *planetExpressShipServer) GetCrew(ctx context.Context, empty *empty.Empty) (*pb.GetCrewResponse, error) {
+	return &pb.GetCrewResponse{
+		Crew: &pb.Crew{
+			Size:            int64(len(members)),
+			Mood:            pb.Crew_MUTINOUS,
+			CaptainMarooned: true,
+			Members:         members,
 		},
 	}, nil
 }
