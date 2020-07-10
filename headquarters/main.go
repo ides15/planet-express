@@ -44,6 +44,20 @@ func getCrew(client pb.PlanetExpressClient) (pb.Crew, error) {
 	return *resp.Crew, nil
 }
 
+func listDeliveries(client pb.PlanetExpressClient) ([]*pb.Delivery, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	resp, err := client.ListDeliveries(ctx, &empty.Empty{})
+
+	if err != nil {
+		log.Fatalf("%v.ListDeliveries(_) = _, %v: ", client, err)
+		return []*pb.Delivery{}, err
+	}
+
+	return resp.Deliveries, nil
+}
+
 func main() {
 	log.Println("Planet Express Headquarters")
 
@@ -70,6 +84,13 @@ func main() {
 	crew, _ := getCrew(client)
 	log.Println("CREW:")
 	log.Println(crew)
+	log.Println()
+
+	deliveries, _ := listDeliveries(client)
+	log.Println("DELIVERIES:")
+	for _, delivery := range deliveries {
+		log.Printf("%+v\n", delivery)
+	}
 	log.Println()
 
 }
