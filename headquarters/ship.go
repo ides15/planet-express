@@ -13,6 +13,7 @@ type shipResolver struct {
 
 func (r *resolver) Ship(ctx context.Context) (*shipResolver, error) {
 	ship, err := getShip(client)
+	// With more time I'd add better error handling of this, since this error might not always be not found
 	if err != nil {
 		return nil, notFoundError{
 			Code:    http.StatusNotFound,

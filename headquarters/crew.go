@@ -13,6 +13,7 @@ type crewResolver struct {
 
 func (r *resolver) Crew(ctx context.Context) (*crewResolver, error) {
 	crew, err := getCrew(client)
+	// With more time I'd add better error handling of this, since this error might not always be not found
 	if err != nil {
 		return nil, notFoundError{
 			Code:    http.StatusNotFound,
