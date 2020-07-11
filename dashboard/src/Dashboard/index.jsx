@@ -15,45 +15,51 @@ const Dashboard = () => {
     });
 
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [ship, setShip] = useState({});
     const [crew, setCrew] = useState({});
     const [deliveries, setDeliveries] = useState({});
 
     const getPlanetExpressData = async () => {
-        const data = await client.query({
-            query: gql`
-                {
-                    ship {
-                        name
-                        location
-                        fuel_level
-                    }
-                    crew {
-                        size
-                        mood
-                        captain_marooned
-                        members {
+        try {
+            const data = await client.query({
+                query: gql`
+                    {
+                        ship {
+                            name
+                            location
+                            fuel_level
+                        }
+                        crew {
+                            size
+                            mood
+                            captain_marooned
+                            members {
+                                id
+                                first_name
+                                last_name
+                                age
+                            }
+                        }
+                        allDeliveries {
                             id
-                            first_name
-                            last_name
-                            age
+                            timestamp
+                            name
+                            weight
+                            fragile
                         }
                     }
-                    allDeliveries {
-                        id
-                        timestamp
-                        name
-                        weight
-                        fragile
-                    }
-                }
-            `,
-        });
+                `,
+            });
 
-        setShip(data.data.ship);
-        setCrew(data.data.crew);
-        setDeliveries(data.data.allDeliveries);
-        setLoading(false);
+            setShip(data.data.ship);
+            setCrew(data.data.crew);
+            setDeliveries(data.data.allDeliveries);
+            setLoading(false);
+        } catch (e) {
+            setError(e);
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -65,6 +71,16 @@ const Dashboard = () => {
             <div className="dashboard">
                 <div className="container">
                     <Spin size="large" />
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="dashboard">
+                <div className="container">
+                    <h3>An error occured, please try again later.</h3>
                 </div>
             </div>
         );
