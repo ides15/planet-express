@@ -96,3 +96,27 @@ If you find errors or otherwise need clarification on anything in the excercise,
 -   Outputted data to `planet_express.json`
 -   Added Dockerfile to `./ship`
 -   Updated `README.md` with details on how to run `./ship` in a container --> [Using Docker](#using-docker)
+
+### Second Task
+
+-   **SKIPPED** help template
+-   Added `ship_engine` and `weapon` resources and added them to `ship.proto`
+-   Added GraphQL support to client (`./headquarters`)
+-   Mapped multiple resources and endpoints to gRPC calls
+
+### Third Task
+
+-   Created React UI for backend services that displays ship, crew, and delivery information
+-   Added a few unit tests to server (`./ship`)
+
+### Running the Entire Project
+
+After going through [Setup](#setup), follow these steps to bootstrap the entire project.
+
+-   navigate to the root directory
+-   `make`
+-   navigate to the UI directory (`./dashboard`)
+-   `npm install`
+-   `npm start`
+-   Open a new terminal window to the root directory and run `./ship/ship`
+-   Open a new terminal window to the root directory and run `./headquarters/headquarters`
