@@ -3,7 +3,22 @@ schema {
 }
 
 type Query {
-    getDelivery(id: String!): Delivery
+    ship: Ship!
+    crew: Crew!
+    delivery(id: String!): Delivery
+    allDeliveries: [Delivery!]
+}
+
+type Ship {
+    name: String!
+    location: String!
+    fuel_level: FuelLevel!
+}
+
+enum FuelLevel {
+    EMPTY
+    LOW
+    FULL
 }
 
 type Delivery {
@@ -12,4 +27,26 @@ type Delivery {
     name: String!
     weight: Int!
     fragile: Boolean!
+}
+
+type Crew {
+    size: Int!
+    mood: Mood!
+    captain_marooned: Boolean!
+    members: [Member!]
+}
+
+enum Mood {
+    ECSTATIC
+    CHEERFUL
+    SATISFIED
+    FRUSTRATED
+    MUTINOUS
+}
+
+type Member {
+    id: String!
+    first_name: String!
+    last_name: String!
+    age: Int!
 }
