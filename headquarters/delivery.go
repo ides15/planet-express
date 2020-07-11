@@ -11,10 +11,10 @@ type deliveryResolver struct {
 	d pb.Delivery
 }
 
-func (r *resolver) GetDelivery(ctx context.Context, args struct{ ID string }) (*deliveryResolver, error) {
+func (r *resolver) Delivery(ctx context.Context, args struct{ ID string }) (*deliveryResolver, error) {
 	delivery, err := getDelivery(client, &pb.GetDeliveryRequest{Id: args.ID})
 	if err != nil {
-		return nil, deliveryNotFoundError{
+		return nil, notFoundError{
 			Code:    http.StatusNotFound,
 			Message: err.Error(),
 		}
@@ -23,6 +23,25 @@ func (r *resolver) GetDelivery(ctx context.Context, args struct{ ID string }) (*
 	return &deliveryResolver{
 		d: delivery,
 	}, nil
+}
+
+func (r *resolver) AllDeliveries(ctx context.Context) (*[]*deliveryResolver, error) {
+	deliveries, err := listDeliveries(client)
+	if err != nil {
+		return nil, internalError{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}
+	}
+
+	dr := make([]*deliveryResolver, len(deliveries))
+	for i := range deliveries {
+		dr[i] = &deliveryResolver{
+			d: *deliveries[i],
+		}
+	}
+
+	return &dr, nil
 }
 
 func (d *deliveryResolver) ID(ctx context.Context) string {
