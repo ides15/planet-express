@@ -174,6 +174,6 @@ func main() {
 
 	pb.RegisterPlanetExpressServer(grpcServer, newServer())
 
-	log.Printf("Ship listening on localhost:%d\n", port)
+	log.Printf("Ship listening on :%d\n", port)
 	grpcServer.Serve(lis)
 }

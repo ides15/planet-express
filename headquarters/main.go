@@ -14,7 +14,7 @@ import (
 const planetExpressFilename = "../planet_express.json"
 
 var (
-	serverAddr = flag.String("server_addr", "localhost:10000", "The server address in the format of host:port")
+	serverAddr = flag.String("server_addr", "127.0.0.1:10000", "The server address in the format of host:port")
 	client     = pb.NewPlanetExpressClient(nil)
 )
 
